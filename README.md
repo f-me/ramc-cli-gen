@@ -4,8 +4,7 @@ Shell скрипт, который собирает билд, для Android п�
 #### Использование
 Запустить скрипт из командной строки, указав в параметрах требуемые значения,
 для генерирования кастомного билда:
-`$ ./generate-ramc-cli.sh -n <NAME> -l <PATH_TO_LOGO_IMAGE> -f <FAIL_MESSAGE> \
--i <INFO_MESSAGE> -p <SUPPORT_PHONE>`
+`$ ./generate-ramc-cli.sh -n <NAME> -l <PATH_TO_LOGO_IMAGE> -f <FAIL_MESSAGE> -i <INFO_MESSAGE> -p <SUPPORT_PHONE>`
 
 где:
 
