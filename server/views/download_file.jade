@@ -1,0 +1,10 @@
+!!!
+#download-file
+  fieldset
+    legend #{legend}
+    for file in files
+      label #{file.name}
+      a.btn(href=file.path)
+        i.icon-download-alt
+        Загрузить
+      span.help-block

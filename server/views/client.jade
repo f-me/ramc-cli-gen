@@ -1,0 +1,25 @@
+!!!
+#client
+  form.gen-app-form(action='/client/gen', method='post', enctype='multipart/form-data')
+    fieldset
+      legend РАМК - клиентское приложение
+
+      label Логотип
+      .input-append
+        input#file-container(type='file', style='display:none;', name='logo', required)
+        input#file-path(type='text', disabled, required)
+        a#file-browse.btn Обзор
+
+      label Сообщение "Заявка не доставлена"
+      textarea.wysi(name='err_msg', required)
+
+      label Телефон
+      input(type='tel', name='tel', required)
+
+      label Информация
+      textarea.wysi(name='info_msg', required)
+
+      span.help-block
+      button.btn.btn-primary(type='submit') Сгенерировать
+
+script(src="/js/client.js")

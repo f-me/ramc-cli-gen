@@ -1,0 +1,14 @@
+!!!
+#partner
+  form.gen-app-form(action='/partner/gen', method='post', enctype='multipart/form-data')
+    fieldset
+      legend РАМК - партнёрское приложение
+
+      label Партнёр
+      select(name='partner', required)
+        for partner in partners
+          option(value=partner.id) #{partner.name}
+
+      span.help-block
+      button.btn.btn-primary(type='submit') Сгенерировать
+
