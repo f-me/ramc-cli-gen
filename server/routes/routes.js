@@ -1,5 +1,5 @@
 exports.index = function(req, res) {
-  res.render('index', { title: 'CarMa - Генерирование мобильных приложений' });
+  res.render('index', { title: 'CaRMa - Генерирование мобильных приложений' });
 };
 
 exports.client = function(req, res) {
