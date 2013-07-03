@@ -8,3 +8,12 @@
       br
       Попробуйте сгенерировать приложение заново,
       убедившись что поля заполнены верно.
+
+    #error.accordion
+      .accordion-group
+        .accordion-heading
+          a.accordion-toggle(data-toggle='collapse', data-parent='error', href='#collapseErrorDesc')
+            Информация для разработчиков
+        #collapseErrorDesc.accordion-body.collapse
+          .accordion-inner
+            samp.text-error #{error}

@@ -39,7 +39,8 @@ function launchWorker() {
   });
 
   app.configure('production', function(){
-    app.use(express.errorHandler());
+    // we need show errors to user
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   });
 
   // Routes

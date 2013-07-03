@@ -33,8 +33,10 @@ function genClientApp(req, res) {
               function(err, stdout, stderr) {
 
     var legendText = 'PAMK - загрузка клиентского приложения';
-    if (err) {
-      res.render('download_file_err', { legend: legendText });
+    if (err || stderr) {
+      var  error = err || stderr;
+      res.render('download_file_err', { legend: legendText, error: error });
+      console.error(error);
     } else {
       moveBuildedApp(buildName, 'cli', function(files) {
         res.render('download_file', { legend: legendText, files: files });
@@ -55,8 +57,10 @@ function genPartnerApp(req, res) {
               function(err, stdout, stderr) {
 
     var legendText = 'PAMK - загрузка партнёрского приложения';
-    if (err) {
-      res.render('download_file_err', { legend: legendText });
+    if (err || stderr) {
+      var  error = err || stderr;
+      res.render('download_file_err', { legend: legendText, error: error });
+      console.error(error);
     } else {
       moveBuildedApp(buildName, 'par', function(files) {
         res.render('download_file', { legend: legendText, files: files });
@@ -77,14 +81,23 @@ function moveBuildedApp(buildName, type, callback) {
   var files = [];
   // remove folder if it already exists
   cp.execFile('rm', ['-rf', pubBuildDir], function(err, stdout, stderr) {
-    // move builded folder to public zone
-    fs.rename(privBuildDir, pubBuildDir, function(err) {
-      var fileNames = fs.readdirSync(pubBuildDir);
-      files = fileNames.map(function(fileName) {
-        return {name: fileName, path: '/build/gen-' + type + '/' + buildName + '/' + fileName};
+    if (err || stderr) {
+      var  error = err || stderr;
+      console.error(error);
+    } else {
+      // move builded folder to public zone
+      fs.rename(privBuildDir, pubBuildDir, function(err) {
+        if (err) {
+          console.error(error);
+        } else {
+          var fileNames = fs.readdirSync(pubBuildDir);
+          files = fileNames.map(function(fileName) {
+            return {name: fileName, path: '/build/gen-' + type + '/' + buildName + '/' + fileName};
+          });
+          callback(files);
+        }
       });
-      callback(files);
-    });
+    }
   });
 }
 
