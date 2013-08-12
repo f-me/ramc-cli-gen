@@ -14,9 +14,10 @@ usage()
   echo -e "-f \t text to show on 'Case' is fails to send"
   echo -e "-i \t text to show in 'Information' screen"
   echo -e "-p \t 'Support center' phone"
+  echo -e "-r \t Program name"
 }
 
-while getopts n:l:f:i:p: option
+while getopts n:l:f:i:p:r: option
 do
   case "$option" in
     "n") NAME=$OPTARG;;
@@ -24,6 +25,7 @@ do
     "f") FAIL_TEXT=$OPTARG;;
     "i") INFO_TEXT=$OPTARG;;
     "p") PHONE=$OPTARG;;
+    "r") PROGRAM=$OPTARG;;
     "?") usage
        exit 2;;
   esac
@@ -38,7 +40,8 @@ fi
 if [ -z "$NAME" ] ||
   [ -z "$FAIL_TEXT" ] ||
   [ -z "$INFO_TEXT" ] ||
-  [ -z "$PHONE" ]
+  [ -z "$PHONE" ] ||
+  [ -z "$PROGRAM" ]
 then
   echo "Error: Please, enter all parameters."
   usage
@@ -72,7 +75,9 @@ awk -v p="$PHONE" \
 awk -v i="$INFO_TEXT" \
 '/<string name=\"info_text\">/{gsub(/>.*</,">"i"<");}1' | \
 awk -v f="$FAIL_TEXT" \
-'/<string name=\"case_send_fail_message\">/{gsub(/>.*</,">"f"<");}1' \
+'/<string name=\"case_send_fail_message\">/{gsub(/>.*</,">"f"<");}1' | \
+awk -v r="$PROGRAM" \
+'/<string name=\"program\">/{gsub(/>.*</,">"r"<");}1' \
 > $STRINGS_XML_TMP_FILE
 
 mv $STRINGS_XML_TMP_FILE $STRINGS_XML_FILE
