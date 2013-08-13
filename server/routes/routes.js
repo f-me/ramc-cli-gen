@@ -1,22 +1,35 @@
-exports.index = function(req, res) {
-  res.render('index', { title: 'CaRMa - Генерирование мобильных приложений' });
-};
+function routes(app) {
+  var dbClient = app.get('dbClient');
 
-exports.client = function(req, res) {
-  res.render('client', {});
-};
+  var index = function(req, res) {
+    res.render('index', { title: 'CaRMa - Генерирование мобильных приложений' });
+  };
 
-exports.genClient = function(req, res) {
-  genClientApp(req, res);
-};
+  var client = function(req, res) {
+    loadClients(req, res, dbClient);
+  };
 
-exports.partner = function(req, res) {
-  loadPartners(req, res);
-};
+  var genClient = function(req, res) {
+    genClientApp(req, res);
+  };
 
-exports.genPartner = function(req, res) {
-  genPartnerApp(req, res);
-};
+  var partner = function(req, res) {
+    loadPartners(req, res, dbClient);
+  };
+
+  var genPartner = function(req, res) {
+    genPartnerApp(req, res);
+  };
+
+  app.get('/', index);
+  app.get('/client', client);
+  app.get('/partner', partner);
+  app.post('/client/gen', genClient);
+  app.post('/partner/gen', genPartner);
+}
+exports.routes = routes;
+
+// Private methods
 
 function genClientApp(req, res) {
   var buildName = gen_rand_name();
@@ -24,11 +37,12 @@ function genClientApp(req, res) {
   var errMsg = req.param('err_msg');
   var infoMsg = req.param('info_msg');
   var tel = req.param('tel');
+  var program = req.param('program');
 
   var cp = require('child_process');
   var scriptCWD = __dirname + '/../../';
   cp.execFile(scriptCWD + 'generate-ramc-cli.sh',
-              ['-n', buildName, '-l', logo.path, '-f', errMsg, '-i', infoMsg, '-p', tel],
+              ['-n', buildName, '-l', logo.path, '-f', errMsg, '-i', infoMsg, '-p', tel, '-r', program],
               {cwd: scriptCWD},
               function(err, stdout, stderr) {
 
@@ -101,23 +115,8 @@ function moveBuildedApp(buildName, type, callback) {
   });
 }
 
-function loadPartners(req, res) {
-  var pg = require('pg').native;
-  var pgConf = require('../pg_conf.js');
-
-  var USER = pgConf.pg_user;
-  var PASSWORD = pgConf.pg_password;
-  var HOST = pgConf.pg_host;
-  var PORT = pgConf.pg_port;
-  var DATABASE = pgConf.pg_database;
-
-  var connPath = "tcp://" + USER + ":" + PASSWORD +
-                 "@" + HOST + ":" + PORT + "/" + DATABASE;
-
-  var client = new pg.Client(connPath);
-  client.connect();
-
-  var query = client.query("SELECT id, name" +
+function loadPartners(req, res, dbClient) {
+  var query = dbClient.query("SELECT id, name" +
                            " FROM partnertbl" +
                            " WHERE ismobile AND name is not null" +
                            " ORDER BY name");
@@ -126,8 +125,21 @@ function loadPartners(req, res) {
     partners.push(row);
   });
   query.on('end', function() {
-    client.end();
     res.render('partner', { partners: partners});
+  });
+}
+
+function loadClients(req, res, dbClient) {
+  var query = dbClient.query("SELECT id, label" +
+                           " FROM programtbl" +
+                           " WHERE label is not null" +
+                           " ORDER BY label");
+  var programs = [];
+  query.on('row', function(row) {
+    programs.push(row);
+  });
+  query.on('end', function() {
+    res.render('client', { programs: programs});
   });
 }
 

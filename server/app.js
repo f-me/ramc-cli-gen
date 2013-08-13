@@ -17,8 +17,7 @@ cluster.on('exit', function(worker) {
 function launchWorker() {
 
   // Module dependencies.
-  var express = require('express')
-    , routes = require('./routes/routes');
+  var express = require('express');
 
   var app = module.exports = express();
 
@@ -32,6 +31,23 @@ function launchWorker() {
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
+
+    // setup db connection
+    var pg = require('pg').native;
+    var pgConf = require('./pg_conf.js');
+
+    var USER = pgConf.pg_user;
+    var PASSWORD = pgConf.pg_password;
+    var HOST = pgConf.pg_host;
+    var PORT = pgConf.pg_port;
+    var DATABASE = pgConf.pg_database;
+
+    var connPath = "tcp://" + USER + ":" + PASSWORD +
+                   "@" + HOST + ":" + PORT + "/" + DATABASE;
+
+    var dbClient = new pg.Client(connPath);
+    dbClient.connect();
+    app.set('dbClient', dbClient);
   });
 
   app.configure('development', function(){
@@ -45,11 +61,7 @@ function launchWorker() {
 
   // Routes
 
-  app.get('/', routes.index);
-  app.get('/client', routes.client);
-  app.get('/partner', routes.partner);
-  app.post('/client/gen', routes.genClient);
-  app.post('/partner/gen', routes.genPartner);
+  require('./routes/routes').routes(app);
 
   app.listen(3000, function(){
     console.log("[WORKER][" + cluster.worker.id + "] CarMa - RAMC mobile app generator is running...");
