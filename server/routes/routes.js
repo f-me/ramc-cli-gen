@@ -34,6 +34,9 @@ exports.routes = routes;
 function genClientApp(req, res) {
   var buildName = gen_rand_name();
   var logo = req.files.logo;
+  var icon48x48 = req.files.icon48x48;
+  var icon72x72 = req.files.icon72x72;
+  var icon96x96 = req.files.icon96x96;
   var errMsg = req.param('err_msg');
   var infoMsg = req.param('info_msg');
   var tel = req.param('tel');
@@ -42,7 +45,9 @@ function genClientApp(req, res) {
   var cp = require('child_process');
   var scriptCWD = __dirname + '/../../';
   cp.execFile(scriptCWD + 'generate-ramc-cli.sh',
-              ['-n', buildName, '-l', logo.path, '-f', errMsg, '-i', infoMsg, '-p', tel, '-r', program],
+              ['-n', buildName, '-l', logo.path, '-f', errMsg, '-i', infoMsg,
+               '-p', tel, '-r', program, '-4', icon48x48.path, '-7', icon72x72.path,
+               '-9', icon96x96.path],
               {cwd: scriptCWD},
               function(err, stdout, stderr) {
 

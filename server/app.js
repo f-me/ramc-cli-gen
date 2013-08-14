@@ -1,7 +1,9 @@
 var cluster = require('cluster');
 
 if (cluster.isMaster) {
-  var cpuCount = require('os').cpus().length;
+  // Reduced number of threads to two
+  // var cpuCount = require('os').cpus().length;
+  var cpuCount = 2;
   for (var i = 0; i < cpuCount; i++) {
     cluster.fork();
   }

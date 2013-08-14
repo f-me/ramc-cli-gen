@@ -6,9 +6,27 @@
 
       label Логотип
       .input-append
-        input#file-container(type='file', style='display:none;', name='logo', required)
-        input#file-path(type='text', disabled, required)
-        a#file-browse.btn Обзор
+        input.file-container(type='file', style='display:none;', name='logo', required)
+        input.file-path(type='text', disabled, required)
+        a.file-browse.btn Обзор
+
+      label Иконка 48x48 px
+      .input-append
+        input.file-container(type='file', style='display:none;', name='icon48x48', required)
+        input.file-path(type='text', disabled, required)
+        a.file-browse.btn Обзор
+
+      label Иконка 72x72 px
+      .input-append
+        input.file-container(type='file', style='display:none;', name='icon72x72', required)
+        input.file-path(type='text', disabled, required)
+        a.file-browse.btn Обзор
+
+      label Иконка 96x96 px
+      .input-append
+        input.file-container(type='file', style='display:none;', name='icon96x96', required)
+        input.file-path(type='text', disabled, required)
+        a.file-browse.btn Обзор
 
       label Программа
       select(name='program', required)
