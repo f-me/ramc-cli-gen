@@ -136,7 +136,7 @@ function loadPartners(req, res, dbClient) {
 
 function loadClients(req, res, dbClient) {
   var query = dbClient.query("SELECT id, label" +
-                           " FROM programtbl" +
+                           " FROM \"Program\"" +
                            " WHERE label is not null" +
                            " ORDER BY label");
   var programs = [];
