@@ -102,7 +102,7 @@ awk -v i="$INFO_TEXT" \
 awk -v f="$FAIL_TEXT" \
 '/<string name=\"case_send_fail_message\">/{gsub(/>.*</,">"f"<");}1' | \
 awk -v r="$PROGRAM" \
-'/<string name=\"program\">/{gsub(/>.*</,">"r"<");}1' \
+'/<integer name=\"program\">/{gsub(/>.*</,">"r"<");}1' \
 > $STRINGS_XML_TMP_FILE
 
 mv $STRINGS_XML_TMP_FILE $STRINGS_XML_FILE

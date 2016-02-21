@@ -31,7 +31,7 @@
       label Программа
       select(name='program', required)
         for program in programs
-          option(value=program.label) #{program.label}
+          option(value=program.id) #{program.label}
 
       label Сообщение "Заявка не доставлена"
       textarea.wysi(name='err_msg', required)
